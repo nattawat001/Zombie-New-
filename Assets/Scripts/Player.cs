@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     AudioSource asource;
     float hp = 100;
     Image imgHP;
+    public GameObject text1,button1;
     
     // Start is called before the first frame update
     void Start()
@@ -25,6 +26,11 @@ public class Player : MonoBehaviour
             asource.PlayOneShot(firearm);
         }
         imgHP.fillAmount = hp / 100;
+        if(hp <= 0)
+        {
+            text1.SetActive(true);
+            button1.SetActive(true);
+        }
     }
 
     void OnTriggerEnter(Collider other)
