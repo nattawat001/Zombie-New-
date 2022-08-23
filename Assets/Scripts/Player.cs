@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.AI;
 public class Player : MonoBehaviour
 {
     public AudioClip firearm;
@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     float hp = 100;
     Image imgHP;
     public GameObject text1,button1;
+    Zombie myZombie;
     
     // Start is called before the first frame update
     void Start()
@@ -24,6 +25,23 @@ public class Player : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             asource.PlayOneShot(firearm);
+            Ray ray;
+            RaycastHit hit;
+            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if(Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.gameObject.CompareTag("Zombie")){
+                   myZombie = hit.collider.gameObject.GetComponent<Zombie>();
+                   myZombie.ZombieHP -=25;
+                   if (myZombie.ZombieHP <= 0)
+                   {
+                    NavMeshAgent agent = myZombie.GetComponent<NavMeshAgent>();
+                    Animator anim = myZombie.GetComponent<Animator>();
+                    agent.speed=0;
+                    anim.SetFloat("hp",0);
+                   }
+                }
+            }
         }
         imgHP.fillAmount = hp / 100;
         if(hp <= 0)
